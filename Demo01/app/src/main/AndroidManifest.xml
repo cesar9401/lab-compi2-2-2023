@@ -12,6 +12,9 @@
         android:theme="@style/Theme.Demo01"
         tools:targetApi="31">
         <activity
+            android:name=".layouts.RelativeActivity"
+            android:exported="false" />
+        <activity
             android:name=".layouts.LinearActivity"
             android:exported="false" />
         <activity
@@ -24,4 +27,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

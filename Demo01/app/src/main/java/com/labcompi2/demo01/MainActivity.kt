@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.labcompi2.demo01.layouts.LinearActivity
+import com.labcompi2.demo01.layouts.RelativeActivity
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,8 +15,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val linearButton: Button = findViewById(R.id.btnLinear)
+        val relativeButton: Button = findViewById(R.id.btnRelative)
+
         linearButton.setOnClickListener {
             goToActivity(this, LinearActivity())
+        }
+
+        relativeButton.setOnClickListener {
+            goToActivity(this, RelativeActivity())
         }
     }
 
