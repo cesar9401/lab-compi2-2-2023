@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Demo01</string>
+    <string name="to">Para</string>
+    <string name="subject">Asunto</string>
+    <string name="message">Mensaje</string>
+    <string name="send">Enviar</string>
+    <string name="toLinear">Linear Layout</string>
+    <string name="back">Regresar</string>
+</resources>
