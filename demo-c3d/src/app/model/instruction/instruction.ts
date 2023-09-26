@@ -1,4 +1,3 @@
-import { SymbolTable } from "src/app/model/instruction/symbol-table";
 import { Visitor } from "src/app/model/visitor/visitor";
 
 export abstract class Instruction {
@@ -9,8 +8,6 @@ export abstract class Instruction {
     this.line = line;
     this.column = column;
   }
-
-  abstract run(table: SymbolTable): any;
 
   abstract accept(v: Visitor): any;
 }
