@@ -5,12 +5,7 @@ export class Value extends Instruction {
   value: any;
   type: ValueType
 
-  constructor(
-    line: number,
-    column: number,
-    value: any,
-    type: ValueType
-  ) {
+  constructor(line: number, column: number, value: any, type: ValueType) {
     super(line, column);
     this.value = value;
     this.type = type;

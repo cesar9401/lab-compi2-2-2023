@@ -1,20 +1,50 @@
-import { Instruction } from "src/app/model/instruction/instruction";
+import { Assignment } from 'src/app/model/instruction/assignment';
+import { BinaryOperation } from 'src/app/model/instruction/binary-operation';
+import { Declaration } from 'src/app/model/instruction/declaration';
+import { OperationType } from 'src/app/model/instruction/operation-type';
+import { Print } from 'src/app/model/instruction/print';
+import { Program } from 'src/app/model/instruction/program';
+import { Value, ValueType } from 'src/app/model/instruction/value';
+import { Variable, VariableType } from 'src/app/model/instruction/variable';
+import { VoidMain } from 'src/app/model/instruction/void-main';
+import { While } from 'src/app/model/instruction/while';
+import { SymbolTableVisitor } from 'src/app/model/visitor/SymbolTableVisitor';
 
 declare var parser: any;
 
 export class Parser {
-  private instructions: Instruction[] = [];
+  private yy: any;
+
   private readonly source: string;
+  private program!: Program;
 
   constructor(source: string) {
     this.source = source;
+
+    parser.yy.Assignment = Assignment;
+    parser.yy.BinaryOperation = BinaryOperation;
+    parser.yy.Declaration = Declaration;
+    parser.yy.OperationType = OperationType;
+    parser.yy.Print = Print;
+    parser.yy.Value = Value;
+    parser.yy.ValueType = ValueType;
+    parser.yy.Variable = Variable;
+    parser.yy.VariableType = VariableType;
+    parser.yy.While = While;
+    parser.yy.VoidMain = VoidMain;
+    parser.yy.Program = Program;
   }
 
   parse() {
     try {
-      this.instructions = parser.parse(this.source);
-      console.log('Success');
-    } catch(error) {
+      this.program = parser.parse(this.source);
+
+      // adding variables to symbol tables
+      const symbolTableVisitor = new SymbolTableVisitor();
+      this.program.accept(symbolTableVisitor);
+      console.log(symbolTableVisitor.tables);
+
+    } catch (error) {
       console.error(error);
       window.alert('Algo salió mal :(');
     }

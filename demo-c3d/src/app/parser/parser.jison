@@ -90,16 +90,21 @@ initial
 
 program
   : declaration_stmts void_main
+    { $$ = new yy.Program(this._$.first_line, this._$.first_column, $1, $2); }
   | void_main
+    { $$ = new yy.Program(this._$.first_line, this._$.first_column, [], $1); }
   ;
 
 declaration_stmts
   : declaration_stmts declaration_stmt
+    { $$ = $1; $$.push($2); }
   | declaration_stmt
+    { $$ = [$1]; }
   ;
 
 void_main
   : VOID MAIN LPAREN RPAREN LBRACE statements RBRACE
+    { $$ = new yy.VoidMain(this._$.first_line, this._$.first_column, $6); }
   ;
 
 statements
@@ -122,71 +127,71 @@ statement
 
 while_stmt
   : WHILE LPAREN a RPAREN LBRACE statements RBRACE
-    // { $$ = new yy.While(this._$.first_line, this._$.first_column, $3, $6); }
+    { $$ = new yy.While(this._$.first_line, this._$.first_column, $3, $6); }
   ;
 
 println_stmt
   : PRINTLN LPAREN a RPAREN SEMI
-    // { $$ = new yy.Print(this._$.first_line, this._$.first_column, $3); }
+    { $$ = new yy.Print(this._$.first_line, this._$.first_column, $3); }
   ;
 
 assign_stmt
   : ID EQ a SEMI
-    // { $$ = new yy.Assignment(this._$.first_line, this._$.first_column, $1, $3); }
+    { $$ = new yy.Assignment(this._$.first_line, this._$.first_column, $1, $3); }
   ;
 
 declaration_stmt
   : type ID EQ a SEMI
-    // { $$ = new yy.Declaration(this._$.first_line, this._$.first_column, $1, $2, $4); }
+    { $$ = new yy.Declaration(this._$.first_line, this._$.first_column, $1, $2, $4); }
   ;
 
 type
   : INT
-    // { $$ = yy.VariableType.INTEGER; }
+    { $$ = yy.VariableType.INTEGER; }
   ;
 
 a
   : a OR b
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.OR, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.OR, $1, $3); }
   | b
-    // { $$ = $1; }
+    { $$ = $1; }
   ;
 
 b
   : b AND c
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.AND, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.AND, $1, $3); }
   | c
     { $$ = $1; }
   ;
 
 c
   : c GREATER d
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.GREATER, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.GREATER, $1, $3); }
   | c LESS d
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.LESS, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.LESS, $1, $3); }
   | c EQEQ d
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.EQEQ, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.EQEQ, $1, $3); }
   | c NEQ d
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.NEQ, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.NEQ, $1, $3); }
   | d
     { $$ = $1; } ;
 
 d
   : d PLUS e
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.PLUS, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.PLUS, $1, $3); }
   | d MINUS e
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.MINUS, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.MINUS, $1, $3); }
   | e
     { $$ = $1; }
   ;
 
 e
   : e TIMES f
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.TIMES, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.TIMES, $1, $3); }
   | e DIVIDE f
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.DIVIDE, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.DIVIDE, $1, $3); }
   | e MOD f
-    // { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.MOD, $1, $3); }
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.MOD, $1, $3); }
   | f
     { $$ = $1; }
   ;
@@ -205,9 +210,9 @@ g
 
 h
   : INTEGER
-    // { $$ = new yy.Value(this._$.first_line, this._$.first_column, $1, yy.ValueType.INTEGER); }
+    { $$ = new yy.Value(this._$.first_line, this._$.first_column, $1, yy.ValueType.INTEGER); }
   | ID
-    // { $$ = new yy.Value(this._$.first_line, this._$.first_column, $1, yy.ValueType.ID); }
+    { $$ = new yy.Value(this._$.first_line, this._$.first_column, $1, yy.ValueType.ID); }
   | LPAREN a RPAREN
     { $$ = $2; }
   ;

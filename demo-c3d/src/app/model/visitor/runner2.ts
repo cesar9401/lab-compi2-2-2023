@@ -2,7 +2,9 @@ import { Assignment } from "src/app/model/instruction/assignment";
 import { BinaryOperation } from "src/app/model/instruction/binary-operation";
 import { Declaration } from "src/app/model/instruction/declaration";
 import { Print } from "src/app/model/instruction/print";
+import { Program } from 'src/app/model/instruction/program';
 import { Value } from "src/app/model/instruction/value";
+import { VoidMain } from 'src/app/model/instruction/void-main';
 import { While } from "src/app/model/instruction/while";
 import { Visitor } from "src/app/model/visitor/visitor";
 
@@ -33,5 +35,11 @@ export class Runner2 extends Visitor {
     i.instructions.forEach(instruction => {
       instruction.accept(this);
     });
+  }
+
+  visitProgram(i: Program): any {
+  }
+
+  visitVoidMain(i: VoidMain): any {
   }
 }

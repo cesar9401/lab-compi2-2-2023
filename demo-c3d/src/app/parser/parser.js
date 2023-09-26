@@ -86,14 +86,80 @@ switch (yystate) {
 case 1:
  return $$[$0-1]; 
 break;
-case 7:
+case 2:
+ this.$ = new yy.Program(this._$.first_line, this._$.first_column, $$[$0-1], $$[$0]); 
+break;
+case 3:
+ this.$ = new yy.Program(this._$.first_line, this._$.first_column, [], $$[$0]); 
+break;
+case 4: case 7:
  this.$ = $$[$0-1]; this.$.push($$[$0]); 
+break;
+case 5:
+ this.$ = [$$[$0]]; 
+break;
+case 6:
+ this.$ = new yy.VoidMain(this._$.first_line, this._$.first_column, $$[$0-1]); 
 break;
 case 8:
  this.$ = []; 
 break;
-case 9: case 10: case 11: case 12: case 21: case 26: case 29: case 33: case 35: case 37:
+case 9: case 10: case 11: case 12: case 19: case 21: case 26: case 29: case 33: case 35: case 37:
  this.$ = $$[$0]; 
+break;
+case 13:
+ this.$ = new yy.While(this._$.first_line, this._$.first_column, $$[$0-4], $$[$0-1]); 
+break;
+case 14:
+ this.$ = new yy.Print(this._$.first_line, this._$.first_column, $$[$0-2]); 
+break;
+case 15:
+ this.$ = new yy.Assignment(this._$.first_line, this._$.first_column, $$[$0-3], $$[$0-1]); 
+break;
+case 16:
+ this.$ = new yy.Declaration(this._$.first_line, this._$.first_column, $$[$0-4], $$[$0-3], $$[$0-1]); 
+break;
+case 17:
+ this.$ = yy.VariableType.INTEGER; 
+break;
+case 18:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.OR, $$[$0-2], $$[$0]); 
+break;
+case 20:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.AND, $$[$0-2], $$[$0]); 
+break;
+case 22:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.GREATER, $$[$0-2], $$[$0]); 
+break;
+case 23:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.LESS, $$[$0-2], $$[$0]); 
+break;
+case 24:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.EQEQ, $$[$0-2], $$[$0]); 
+break;
+case 25:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.NEQ, $$[$0-2], $$[$0]); 
+break;
+case 27:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.PLUS, $$[$0-2], $$[$0]); 
+break;
+case 28:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.MINUS, $$[$0-2], $$[$0]); 
+break;
+case 30:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.TIMES, $$[$0-2], $$[$0]); 
+break;
+case 31:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.DIVIDE, $$[$0-2], $$[$0]); 
+break;
+case 32:
+ this.$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.MOD, $$[$0-2], $$[$0]); 
+break;
+case 38:
+ this.$ = new yy.Value(this._$.first_line, this._$.first_column, $$[$0], yy.ValueType.INTEGER); 
+break;
+case 39:
+ this.$ = new yy.Value(this._$.first_line, this._$.first_column, $$[$0], yy.ValueType.ID); 
 break;
 case 40:
  this.$ = $$[$0-1]; 

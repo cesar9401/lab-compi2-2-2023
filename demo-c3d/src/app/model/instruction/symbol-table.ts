@@ -1,15 +1,19 @@
 import { Variable } from "src/app/model/instruction/variable";
 
 export class SymbolTable extends Array<Variable> {
+  private scope: string;
 
-  constructor(parent?: SymbolTable) {
+  constructor(scope: string, parent?: SymbolTable) {
     super();
+    this.scope = scope;
+
     if (parent) {
       this.push(...parent);
     }
   }
 
   add(variable: Variable) {
+    variable.pos = this.length;
     return this.push(variable);
   }
 
