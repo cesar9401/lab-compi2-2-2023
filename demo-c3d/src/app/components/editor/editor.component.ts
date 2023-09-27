@@ -29,7 +29,11 @@ export class EditorComponent implements OnInit{
 
   onCompile() {
     const parser = new Parser(this.codeModel.value);
-    parser.parse();
+    const out = parser.parse();
+    const model = this.codeModel;
+    model.value = out;
+
+    this.codeModel = JSON.parse(JSON.stringify(model));
   }
 
   ngOnInit(): void {

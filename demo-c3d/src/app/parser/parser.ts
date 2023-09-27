@@ -8,6 +8,9 @@ import { Value, ValueType } from 'src/app/model/instruction/value';
 import { Variable, VariableType } from 'src/app/model/instruction/variable';
 import { VoidMain } from 'src/app/model/instruction/void-main';
 import { While } from 'src/app/model/instruction/while';
+import { QuadHandler } from 'src/app/model/QuadHandler';
+import { QuadUtil } from 'src/app/model/QuadUtil';
+import { QuadGeneratorVisitor } from 'src/app/model/visitor/QuadGeneratorVisitor';
 import { SymbolTableVisitor } from 'src/app/model/visitor/SymbolTableVisitor';
 
 declare var parser: any;
@@ -42,11 +45,19 @@ export class Parser {
       // adding variables to symbol tables
       const symbolTableVisitor = new SymbolTableVisitor();
       this.program.accept(symbolTableVisitor);
-      console.log(symbolTableVisitor.tables);
+
+      const quadHandler = new QuadHandler(symbolTableVisitor.tables);
+      const quadVisitor = new QuadGeneratorVisitor(quadHandler);
+
+      this.program.accept(quadVisitor);
+
+      const quadUtil = new QuadUtil(quadHandler.quads);
+      return quadUtil.toC();
 
     } catch (error) {
       console.error(error);
       window.alert('Algo salió mal :(');
+      return 'Error :(';
     }
   }
 }

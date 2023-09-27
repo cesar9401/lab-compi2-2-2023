@@ -25,7 +25,6 @@ export class SymbolTableVisitor extends Visitor {
 
   visitDeclaration(i: Declaration): any {
     // TODO: check if the variable or id already exists
-
     const variable = new Variable();
     variable.id = i.id;
     variable.type = VariableType.INTEGER;

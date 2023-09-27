@@ -20,5 +20,6 @@ export enum QuadOperation {
   TIMES,
   DIVIDE,
   ASSIGMENT, // or equal
+  TMP_ASSIGMENT,
   PRINTLN
 }

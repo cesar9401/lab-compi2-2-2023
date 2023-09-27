@@ -14,6 +14,7 @@ export class QuadHandler {
 
     this._quads = [];
     this.tables = tables;
+    this.stack = [];
   }
 
   public get tmpVar(): string {
