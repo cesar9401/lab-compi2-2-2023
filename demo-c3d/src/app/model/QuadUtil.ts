@@ -76,6 +76,8 @@ int main() {
         case QuadOperation.GOTO:
           result += `goto ${quad.result};`;
           break;
+        default:
+          console.log(quad);
       }
       result += '\n';
     }

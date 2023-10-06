@@ -2,6 +2,7 @@ import { Assignment } from 'src/app/model/instruction/assignment';
 import { BinaryOperation } from 'src/app/model/instruction/binary-operation';
 import { Declaration } from 'src/app/model/instruction/declaration';
 import { IfInstruction, TypeIf } from 'src/app/model/instruction/if';
+import { Instruction } from 'src/app/model/instruction/instruction';
 import { OperationType } from 'src/app/model/instruction/operation-type';
 import { Print } from 'src/app/model/instruction/print';
 import { Program } from 'src/app/model/instruction/program';
@@ -83,124 +84,138 @@ export class QuadGeneratorVisitor extends Visitor {
 
   visitBinaryOperation(i: BinaryOperation): Quadruple | undefined {
     if (i.leftOperator && i.rightOperator) {
-      const left: Quadruple | undefined = i.leftOperator.accept(this);
-      const right: Quadruple | undefined = i.rightOperator.accept(this);
       const tmp = this.qh.tmpVar;
       let type!: QuadOperation | undefined;
 
-      if (left && right) {
-        switch (i.type) {
-          case OperationType.PLUS:
-            type = QuadOperation.PLUS;
-            break;
-          case OperationType.MINUS:
-            type = QuadOperation.MINUS;
-            break;
-          case OperationType.TIMES:
-            type = QuadOperation.TIMES;
-            break;
-          case OperationType.DIVIDE:
-            type = QuadOperation.DIVIDE;
-            break;
+      switch (i.type) {
+        case OperationType.PLUS:
+          type = QuadOperation.PLUS;
+          break;
+        case OperationType.MINUS:
+          type = QuadOperation.MINUS;
+          break;
+        case OperationType.TIMES:
+          type = QuadOperation.TIMES;
+          break;
+        case OperationType.DIVIDE:
+          type = QuadOperation.DIVIDE;
+          break;
 
-          // implement relational operations
-          case OperationType.GREATER:
-            return this.logicQuad(QuadOperation.IF_GREATER, left, right);
-          case OperationType.GREATER_EQ:
-            return this.logicQuad(QuadOperation.IF_GREATER_EQ, left, right);
-          case OperationType.LESS:
-            return this.logicQuad(QuadOperation.IF_LESS, left, right);
-          case OperationType.LESS_EQ:
-            return this.logicQuad(QuadOperation.IF_LESS_EQ, left, right);
-          case OperationType.EQEQ:
-            return this.logicQuad(QuadOperation.EQEQ, left, right);
-          case OperationType.NEQ:
-            return this.logicQuad(QuadOperation.NEQ, left, right);
+        // implement relational operations
+        case OperationType.GREATER:
+          return this.logicQuad(QuadOperation.IF_GREATER, i.leftOperator, i.rightOperator);
+        case OperationType.GREATER_EQ:
+          return this.logicQuad(QuadOperation.IF_GREATER_EQ, i.leftOperator, i.rightOperator);
+        case OperationType.LESS:
+          return this.logicQuad(QuadOperation.IF_LESS, i.leftOperator, i.rightOperator);
+        case OperationType.LESS_EQ:
+          return this.logicQuad(QuadOperation.IF_LESS_EQ, i.leftOperator, i.rightOperator);
+        case OperationType.EQEQ:
+          return this.logicQuad(QuadOperation.EQEQ, i.leftOperator, i.rightOperator);
+        case OperationType.NEQ:
+          return this.logicQuad(QuadOperation.NEQ, i.leftOperator, i.rightOperator);
 
-          // TODO: implement logic operations
-          case OperationType.AND:
-            /* left */
-            // TODO: check the type of operation of left
-            const lefAndTrue = new Quadruple(QuadOperation.IF_GREATER, left.result, '0', '');
-            const leftAndGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
-            this.qh.addTrue(lefAndTrue); /* in case of true */
-            this.qh.addFalse(leftAndGotoFalse);/* in case of false */
+        // TODO: implement logic operations
+        case OperationType.AND:
 
-            // add quadruples
-            this.qh.quads.push(lefAndTrue);
-            this.qh.quads.push(leftAndGotoFalse);
+          const andLeft: Quadruple | undefined = i.leftOperator.accept(this);
+          /* left */
+          // TODO: check the type of operation of left
+          // const lefAndTrue = new Quadruple(QuadOperation.IF_GREATER, left.result, '0', '');
+          // const leftAndGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
+          // this.qh.addTrue(lefAndTrue); /* in case of true */
+          // this.qh.addFalse(leftAndGotoFalse);/* in case of false */
 
-            // in case of true
-            const labelAndTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
-            this.qh.toTrue(labelAndTrue);
-            this.qh.quads.push(new Quadruple(QuadOperation.LABEL, labelAndTrue, '', ''));
-            this.qh.labelTrue = undefined;
+          // add quadruples
+          // this.qh.quads.push(lefAndTrue);
+          // this.qh.quads.push(leftAndGotoFalse);
 
-            // in case of false
-            this.qh.labelFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
-            this.qh.toFalse(this.qh.labelFalse);
+          // in case of true
+          const labelAndTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
+          this.qh.toTrue(labelAndTrue);
+          this.qh.quads.push(new Quadruple(QuadOperation.LABEL, labelAndTrue, '', ''));
+          this.qh.labelTrue = undefined;
 
-            /* right */
-            // TODO: check the type of operation of right
-            const rightAndTrue = new Quadruple(QuadOperation.IF_GREATER, right.result, '0', '');
-            const rightAndGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
 
-            this.qh.addTrue(rightAndTrue);
-            this.qh.addFalse(rightAndGotoFalse);
+          // in case of false
+          this.qh.labelFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
+          this.qh.toFalse(this.qh.labelFalse);
 
-            // add quadruples
-            this.qh.quads.push(rightAndTrue);
-            this.qh.quads.push(rightAndGotoFalse);
-            return;
-          case OperationType.OR:
-            /* left */
-            // TODO: check the type of operation of left
-            const leftOrTrue = new Quadruple(QuadOperation.IF_GREATER, left.result, '0', '');
-            const leftOrGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
+          const andRight: Quadruple | undefined = i.rightOperator.accept(this);
 
-            this.qh.addTrue(leftOrTrue);
-            this.qh.addFalse(leftOrGotoFalse);
+          /* right */
+          // TODO: check the type of operation of right
+          // const rightAndTrue = new Quadruple(QuadOperation.IF_GREATER, right.result, '0', '');
+          // const rightAndGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
 
-            // add quadruples
-            this.qh.quads.push(leftOrTrue);
-            this.qh.quads.push(leftOrGotoFalse);
+          // this.qh.addTrue(rightAndTrue);
+          // this.qh.addFalse(rightAndGotoFalse);
 
-            // in case of false
-            const labelOrFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
-            this.qh.toFalse(labelOrFalse);
-            this.qh.quads.push(new Quadruple(QuadOperation.LABEL, labelOrFalse, '', ''));
-            this.qh.labelFalse = undefined;
+          // add quadruples
+          // this.qh.quads.push(rightAndTrue);
+          // this.qh.quads.push(rightAndGotoFalse);
+          return;
+        case OperationType.OR:
+          const orLeft: Quadruple | undefined = i.leftOperator.accept(this);
+          /* left */
+          // TODO: check the type of operation of left
+          // const leftOrTrue = new Quadruple(QuadOperation.IF_GREATER, left.result, '0', '');
+          // const leftOrGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
 
-            // in case of true
-            const labelOrTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
-            this.qh.toTrue(labelOrTrue);
+          // this.qh.addTrue(leftOrTrue);
+          // this.qh.addFalse(leftOrGotoFalse);
 
-            /* right */
-            // TODO: check the type of operation of right
-            const rightOrTrue = new Quadruple(QuadOperation.IF_GREATER, right.result, '0', '');
-            const rightOrGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
+          // add quadruples
+          // this.qh.quads.push(leftOrTrue);
+          // this.qh.quads.push(leftOrGotoFalse);
 
-            this.qh.addTrue(rightOrTrue);
-            this.qh.addFalse(rightOrGotoFalse);
+          // in case of false
+          const labelOrFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
+          this.qh.toFalse(labelOrFalse);
+          this.qh.quads.push(new Quadruple(QuadOperation.LABEL, labelOrFalse, '', ''));
+          this.qh.labelFalse = undefined;
 
-            // add quadruples
-            this.qh.quads.push(rightOrTrue);
-            this.qh.quads.push(rightOrGotoFalse);
-            return;
-        }
+          // in case of true
+          const labelOrTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
+          this.qh.toTrue(labelOrTrue);
 
-        if (type != undefined) {
-          const quad = new Quadruple(type, left.result, right.result, tmp);
-          this.qh.quads.push(quad);
-          return quad;
-        }
+          const orRight: Quadruple | undefined = i.rightOperator.accept(this);
+
+          /* right */
+          // TODO: check the type of operation of right
+          // const rightOrTrue = new Quadruple(QuadOperation.IF_GREATER, right.result, '0', '');
+          // const rightOrGotoFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
+
+          // this.qh.addTrue(rightOrTrue);
+          // this.qh.addFalse(rightOrGotoFalse);
+
+          // add quadruples
+          // this.qh.quads.push(rightOrTrue);
+          // this.qh.quads.push(rightOrGotoFalse);
+          return;
+      }
+
+      if (type != undefined) {
+        const left: Quadruple | undefined = i.leftOperator.accept(this);
+        const right: Quadruple | undefined = i.rightOperator.accept(this);
+
+        if (!left || !right) return;
+
+        const quad = new Quadruple(type, left.result, right.result, tmp);
+        this.qh.quads.push(quad);
+        return quad;
       }
     }
 
     return undefined;
   }
 
-  private logicQuad(type: QuadOperation, left: Quadruple, right: Quadruple): Quadruple {
+  private logicQuad(type: QuadOperation, leftOp: Instruction, rightOp: Instruction): Quadruple | undefined {
+    const left: Quadruple | undefined = leftOp.accept(this);
+    const right: Quadruple | undefined = rightOp.accept(this);
+
+    if (!left || !right) return;
+
     const quadTrue = new Quadruple(type, left.result, right.result, '');
     const goToFalse = new Quadruple(QuadOperation.GOTO, '', '', '');
 
@@ -328,7 +343,7 @@ export class QuadGeneratorVisitor extends Visitor {
       let labelFalse: string | undefined = undefined;
 
       const condition = ifInstruction.condition;
-      if (condition && condition instanceof  BinaryOperation) {
+      if (condition && condition instanceof BinaryOperation) {
         const quad: Quadruple | undefined = condition.accept(this);
         // if (!quad) return;
 
