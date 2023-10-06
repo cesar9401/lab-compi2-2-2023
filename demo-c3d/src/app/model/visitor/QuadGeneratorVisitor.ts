@@ -1,7 +1,7 @@
 import { Assignment } from 'src/app/model/instruction/assignment';
 import { BinaryOperation } from 'src/app/model/instruction/binary-operation';
 import { Declaration } from 'src/app/model/instruction/declaration';
-import { IfInstruction } from 'src/app/model/instruction/if';
+import { IfInstruction, TypeIf } from 'src/app/model/instruction/if';
 import { OperationType } from 'src/app/model/instruction/operation-type';
 import { Print } from 'src/app/model/instruction/print';
 import { Program } from 'src/app/model/instruction/program';
@@ -37,7 +37,6 @@ export class QuadGeneratorVisitor extends Visitor {
           case OperationType.AND:
           case OperationType.OR:
 
-            console.log(i.operation.type);
             const labelTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
             const labelFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
             const labelFinal = this.qh.label;
@@ -55,7 +54,7 @@ export class QuadGeneratorVisitor extends Visitor {
               const tmpTrue = this.qh.tmpVar;
               this.qh.quads.push(new Quadruple(QuadOperation.PLUS, this.POINTER, `${variable.pos}`, tmpTrue));
               this.qh.quads.push(new Quadruple(QuadOperation.ASSIGMENT, '1', '', `stack[${tmpTrue}]`));// asignar 1 - true
-              this.qh.quads.push(new Quadruple(QuadOperation.GOTO, labelFinal, '', ''));
+              this.qh.quads.push(new Quadruple(QuadOperation.GOTO, '', '', labelFinal));
 
               // false
               this.qh.quads.push(new Quadruple(QuadOperation.LABEL, labelFalse, '', ''));
@@ -68,7 +67,7 @@ export class QuadGeneratorVisitor extends Visitor {
             }
             return;
           default:
-            // do nothing
+          // do nothing
         }
       }
 
@@ -229,7 +228,6 @@ export class QuadGeneratorVisitor extends Visitor {
           case OperationType.AND:
           case OperationType.OR:
 
-            console.log(i.operation.type);
             const labelTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
             const labelFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
             const labelFinal = this.qh.label;
@@ -247,7 +245,7 @@ export class QuadGeneratorVisitor extends Visitor {
               const tmpTrue = this.qh.tmpVar;
               this.qh.quads.push(new Quadruple(QuadOperation.PLUS, this.POINTER, `${variable.pos}`, tmpTrue));
               this.qh.quads.push(new Quadruple(QuadOperation.ASSIGMENT, '1', '', `stack[${tmpTrue}]`));// asignar 1 - true
-              this.qh.quads.push(new Quadruple(QuadOperation.GOTO, labelFinal, '', ''));
+              this.qh.quads.push(new Quadruple(QuadOperation.GOTO, '', '', labelFinal));
 
               // false
               this.qh.quads.push(new Quadruple(QuadOperation.LABEL, labelFalse, '', ''));
@@ -260,7 +258,7 @@ export class QuadGeneratorVisitor extends Visitor {
             }
             return;
           default:
-            // do nothing
+          // do nothing
         }
       }
 
@@ -330,13 +328,15 @@ export class QuadGeneratorVisitor extends Visitor {
       let labelFalse: string | undefined = undefined;
 
       const condition = ifInstruction.condition;
-      if (condition) {
+      if (condition && condition instanceof  BinaryOperation) {
         const quad: Quadruple | undefined = condition.accept(this);
-        if (!quad) return;
+        // if (!quad) return;
 
         labelTrue = this.qh.labelTrue ? this.qh.labelTrue : this.qh.label;
         labelFalse = this.qh.labelFalse ? this.qh.labelFalse : this.qh.label;
 
+        this.qh.labelTrue = undefined;
+        this.qh.labelFalse = undefined;
         switch (condition.type) {
           case OperationType.GREATER_EQ:
           case OperationType.GREATER:
@@ -356,7 +356,7 @@ export class QuadGeneratorVisitor extends Visitor {
           instructions.accept(this);
         }
         // to final label
-        this.qh.quads.push(new Quadruple(QuadOperation.GOTO, finalLabel, '', ''));
+        this.qh.quads.push(new Quadruple(QuadOperation.GOTO, '', '', finalLabel));
 
         // label false
         if (labelFalse) {

@@ -1,6 +1,6 @@
 import { BinaryOperation } from 'src/app/model/instruction/binary-operation';
 import { Instruction } from 'src/app/model/instruction/instruction';
-import { Value } from 'src/app/model/instruction/value';
+import { Value, ValueType } from 'src/app/model/instruction/value';
 import { Visitor } from 'src/app/model/visitor/visitor';
 
 export class If {
@@ -10,7 +10,12 @@ export class If {
 
   constructor(type: TypeIf, condition: BinaryOperation | Value | undefined, instructions: Instruction[]) {
     this.type = type;
-    this.condition = condition;
+    if (!condition) {
+      // TODO: check this
+      this.condition = new Value(-1, -1, 0, ValueType.INTEGER);
+    } else {
+      this.condition = condition;
+    }
     this.instructions = instructions;
   }
 }

@@ -29,7 +29,6 @@ int main() {
 `;
 
     for (const quad of this.quads) {
-      console.log(quad);
       result += '\t';
       switch (quad.op) {
         case QuadOperation.PLUS:
@@ -75,7 +74,7 @@ int main() {
           result += `${quad.arg1}:`;
           break;
         case QuadOperation.GOTO:
-          result += `goto ${quad.arg1};`;
+          result += `goto ${quad.result};`;
           break;
       }
       result += '\n';

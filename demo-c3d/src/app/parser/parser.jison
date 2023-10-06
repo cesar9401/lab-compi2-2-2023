@@ -31,8 +31,8 @@ greater             ">"
 greater_eq          ">="
 less                "<"
 less_eq             "<="
-eq                  "="
 eqeq                "=="
+eq                  "="
 neq                 "!="
 and                 "&&"
 or                  "or"
@@ -63,8 +63,8 @@ not                 "!"
 {greater_eq}        return "GREATER_EQ";
 {less}              return "LESS";
 {less_eq}           return "LESS_EQ";
-{eq}                return "EQ";
 {eqeq}              return "EQEQ";
+{eq}                return "EQ";
 {neq}               return "NEQ";
 {and}               return "AND";
 {or}                return "OR";

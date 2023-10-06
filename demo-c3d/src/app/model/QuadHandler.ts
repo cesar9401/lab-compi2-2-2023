@@ -82,7 +82,6 @@ export class QuadHandler {
     }
   }
 
-
   get labelTrue(): string | undefined {
     return this._labelTrue;
   }
