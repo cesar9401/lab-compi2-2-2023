@@ -1,6 +1,7 @@
 import { Assignment } from 'src/app/model/instruction/assignment';
 import { BinaryOperation } from 'src/app/model/instruction/binary-operation';
 import { Declaration } from 'src/app/model/instruction/declaration';
+import { If, IfInstruction, TypeIf } from 'src/app/model/instruction/if';
 import { OperationType } from 'src/app/model/instruction/operation-type';
 import { Print } from 'src/app/model/instruction/print';
 import { Program } from 'src/app/model/instruction/program';
@@ -34,6 +35,9 @@ export class Parser {
     parser.yy.Variable = Variable;
     parser.yy.VariableType = VariableType;
     parser.yy.While = While;
+    parser.yy.If = If;
+    parser.yy.TypeIf = TypeIf;
+    parser.yy.IfInstruction = IfInstruction;
     parser.yy.VoidMain = VoidMain;
     parser.yy.Program = Program;
   }

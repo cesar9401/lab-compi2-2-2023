@@ -1,7 +1,5 @@
 import { Instruction } from "src/app/model/instruction/instruction";
 import { OperationType } from "src/app/model/instruction/operation-type";
-import { SymbolTable } from "src/app/model/instruction/symbol-table";
-import { Variable, VariableType } from "src/app/model/instruction/variable";
 import { Visitor } from "src/app/model/visitor/visitor";
 
 export class BinaryOperation extends Instruction {

@@ -11,6 +11,8 @@ main                "main"
 pow                 "pow"|"POW"
 int                 "int"
 while               "while"
+if                  "if"
+else                "else"
 println             "System.out.println"
 
 /* operators */
@@ -26,7 +28,9 @@ lbrace              "{"
 rbrace              "}"
 semi                ";"
 greater             ">"
+greater_eq          ">="
 less                "<"
+less_eq             "<="
 eq                  "="
 eqeq                "=="
 neq                 "!="
@@ -37,7 +41,6 @@ not                 "!"
 %%
 
 {whitespace}        /* skip */
-// {decimal}           return "DECIMAL";
 {integer}           return "INTEGER";
 
 {void}              return "VOID";
@@ -45,6 +48,8 @@ not                 "!"
 {pow}               return "POW";
 {int}               return "INT";
 {while}             return "WHILE";
+{if}                return "IF";
+{else}              return "ELSE";
 {println}           return "PRINTLN";
 
 /* operators */
@@ -55,7 +60,9 @@ not                 "!"
 {mod}               return "MOD";
 {comma}             return "COMMA";
 {greater}           return "GREATER";
+{greater_eq}        return "GREATER_EQ";
 {less}              return "LESS";
+{less_eq}           return "LESS_EQ";
 {eq}                return "EQ";
 {eqeq}              return "EQEQ";
 {neq}               return "NEQ";
@@ -121,6 +128,8 @@ statement
     { $$ = $1; }
   | while_stmt
     { $$ = $1; }
+  | if_stmt
+    { $$ = $1; }
   | println_stmt
     { $$ = $1; }
   ;
@@ -128,6 +137,39 @@ statement
 while_stmt
   : WHILE LPAREN a RPAREN LBRACE statements RBRACE
     { $$ = new yy.While(this._$.first_line, this._$.first_column, $3, $6); }
+  ;
+
+if_stmt
+  : _if
+    { $$ = new yy.IfInstruction(this._$.first_line, this._$.first_column, $1, [], undefined); }
+  | _if _else
+    { $$ = new yy.IfInstruction(this._$.first_line, this._$.first_column, $1, [], $2); }
+  | _if list_else_if
+    { $$ = new yy.IfInstruction(this._$.first_line, this._$.first_column, $1, $2, undefined); }
+  | if list_else_if _else
+    { $$ = new yy.IfInstruction(this._$.first_line, this._$.first_column, $1, $2, $3); }
+  ;
+
+_if
+  : IF LPAREN a RPAREN LBRACE statements RBRACE
+    { $$ = new yy.If(yy.TypeIf.IF, $3, $6); }
+  ;
+
+_else
+  : ELSE LBRACE statements RBRACE
+    { $$ = new yy.If(yy.TypeIf.ELSE, undefined, $3); }
+  ;
+
+list_else_if
+  : list_else_if _else_if
+    { $$ = $1; $$.push($2); }
+  | _else_if
+    { $$ = [$1]; }
+  ;
+
+_else_if
+  : ELSE IF LPAREN a RPAREN LBRACE statements RBRACE
+    { $$ = new yy.If(yy.TypeIf.ELSE_IF, $4, $7); }
   ;
 
 println_stmt
@@ -167,8 +209,12 @@ b
 c
   : c GREATER d
     { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.GREATER, $1, $3); }
+  | c GREATER_EQ d
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.GREATER_EQ, $1, $3); }
   | c LESS d
     { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.LESS, $1, $3); }
+  | c LESS_EQ d
+    { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.LESS_EQ, $1, $3); }
   | c EQEQ d
     { $$ = new yy.BinaryOperation(this._$.first_line, this._$.first_column, yy.OperationType.EQEQ, $1, $3); }
   | c NEQ d

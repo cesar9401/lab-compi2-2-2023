@@ -1,11 +1,11 @@
 import { Assignment } from "src/app/model/instruction/assignment";
 import { BinaryOperation } from "src/app/model/instruction/binary-operation";
 import { Declaration } from "src/app/model/instruction/declaration";
+import { IfInstruction } from 'src/app/model/instruction/if';
 import { Print } from "src/app/model/instruction/print";
 import { Program } from 'src/app/model/instruction/program';
 import { SymbolTable } from "src/app/model/instruction/symbol-table";
 import { Value } from "src/app/model/instruction/value";
-import { Variable } from "src/app/model/instruction/variable";
 import { VoidMain } from 'src/app/model/instruction/void-main';
 import { While } from "src/app/model/instruction/while";
 import { Visitor } from "src/app/model/visitor/visitor";
@@ -45,5 +45,8 @@ export class Runner extends Visitor {
   }
 
   visitVoidMain(i: VoidMain): any {
+  }
+
+  visitIfInstruction(i: IfInstruction): any {
   }
 }

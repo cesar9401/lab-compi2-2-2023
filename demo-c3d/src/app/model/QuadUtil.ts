@@ -29,36 +29,63 @@ int main() {
 `;
 
     for (const quad of this.quads) {
+      console.log(quad);
+      result += '\t';
       switch (quad.op) {
         case QuadOperation.PLUS:
-          result += `\tint ${quad.result} = ${quad.arg1} + ${quad.arg2};\n`;
+          result += `int ${quad.result} = ${quad.arg1} + ${quad.arg2};`;
           break;
         case QuadOperation.MINUS:
-          result += `\tint ${quad.result} = ${quad.arg1} - ${quad.arg2};\n`;
+          result += `int ${quad.result} = ${quad.arg1} - ${quad.arg2};`;
           break;
         case QuadOperation.TIMES:
-          result += `\tint ${quad.result} = ${quad.arg1} * ${quad.arg2};\n`;
+          result += `int ${quad.result} = ${quad.arg1} * ${quad.arg2};`;
           break;
         case QuadOperation.DIVIDE:
-          result += `\tint ${quad.result} = ${quad.arg1} / ${quad.arg2};\n`;
+          result += `int ${quad.result} = ${quad.arg1} / ${quad.arg2};`;
           break;
         case QuadOperation.PRINTLN:
-          result += `\tprintf("%d\\n", ${quad.arg1});\n`;
+          result += `printf("%d\\n", ${quad.arg1});`;
           break;
         case QuadOperation.ASSIGMENT:
-          result += `\t${quad.result} = ${quad.arg1};\n`;
+          result += `${quad.result} = ${quad.arg1};`;
           break;
         case QuadOperation.TMP_ASSIGMENT:
-          result += `\tint ${quad.result} = ${quad.arg1};\n`;
+          result += `int ${quad.result} = ${quad.arg1};`;
+          break;
+        case QuadOperation.IF_GREATER:
+          result += `if (${quad.arg1} > ${quad.arg2}) goto ${quad.result};`;
+          break;
+        case QuadOperation.IF_GREATER_EQ:
+          result += `if (${quad.arg1} >= ${quad.arg2}) goto ${quad.result};`;
+          break;
+        case QuadOperation.IF_LESS:
+          result += `if (${quad.arg1} < ${quad.arg2}) goto ${quad.result};`;
+          break;
+        case QuadOperation.IF_LESS_EQ:
+          result += `if (${quad.arg1} <= ${quad.arg2}) goto ${quad.result};`;
+          break;
+        case QuadOperation.EQEQ:
+          result += `if (${quad.arg1} == ${quad.arg2}) goto ${quad.result};`;
+          break;
+        case QuadOperation.NEQ:
+          result += `if (${quad.arg1} != ${quad.arg2}) goto ${quad.result};`;
+          break;
+        case QuadOperation.LABEL:
+          result += `${quad.arg1}:`;
+          break;
+        case QuadOperation.GOTO:
+          result += `goto ${quad.arg1};`;
           break;
       }
+      result += '\n';
     }
 
     result += `
 
 \treturn 0;
 \n}\n
-    `;
+`;
 
     return result;
   }

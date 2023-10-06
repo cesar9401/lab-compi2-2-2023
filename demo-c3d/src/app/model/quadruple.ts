@@ -21,5 +21,17 @@ export enum QuadOperation {
   DIVIDE,
   ASSIGMENT, // or equal
   TMP_ASSIGMENT,
-  PRINTLN
+  PRINTLN,
+
+  AND,
+  OR,
+  NOT,
+  IF_GREATER,
+  IF_GREATER_EQ,
+  IF_LESS,
+  IF_LESS_EQ,
+  EQEQ,
+  NEQ,
+  GOTO,
+  LABEL
 }

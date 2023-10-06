@@ -1,6 +1,7 @@
 import { Assignment } from 'src/app/model/instruction/assignment';
 import { BinaryOperation } from 'src/app/model/instruction/binary-operation';
 import { Declaration } from 'src/app/model/instruction/declaration';
+import { IfInstruction } from 'src/app/model/instruction/if';
 import { Print } from 'src/app/model/instruction/print';
 import { Program } from 'src/app/model/instruction/program';
 import { SymbolTable } from 'src/app/model/instruction/symbol-table';
@@ -66,5 +67,20 @@ export class SymbolTableVisitor extends Visitor {
 
   get tables(): SymbolTable[] {
     return this._tables;
+  }
+
+  visitIfInstruction(i: IfInstruction): any {
+    const cur = this.curTable;
+    const ifInstructions = [i._if, ...i._elseIfList];
+    if (i._else) ifInstructions.push(i._else);
+
+    for (const _ifIns of ifInstructions) {
+      const ifTable = new SymbolTable(`if-${_ifIns.type}-${i.line}-${i.column}`, cur);
+      this._tables.push(ifTable);
+      this.curTable = ifTable;
+      _ifIns.instructions.forEach(instruction => instruction.accept(this));
+    }
+
+    this.curTable = cur;
   }
 }
